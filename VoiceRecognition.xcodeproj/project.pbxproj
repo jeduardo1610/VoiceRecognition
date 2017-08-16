@@ -304,6 +304,7 @@
 				1D964D451F44EFE000A1208C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
