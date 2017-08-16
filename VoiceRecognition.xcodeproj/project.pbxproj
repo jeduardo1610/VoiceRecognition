@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D414FED1F44F48400B1AEA0 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D414FEC1F44F48400B1AEA0 /* Speech.framework */; };
 		1D964D351F44EFE000A1208C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D964D341F44EFE000A1208C /* AppDelegate.swift */; };
 		1D964D371F44EFE000A1208C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D964D361F44EFE000A1208C /* ViewController.swift */; };
 		1D964D3A1F44EFE000A1208C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D964D381F44EFE000A1208C /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1D414FEC1F44F48400B1AEA0 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 		1D964D311F44EFE000A1208C /* VoiceRecognition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceRecognition.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D964D341F44EFE000A1208C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1D964D361F44EFE000A1208C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -29,17 +31,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D414FED1F44F48400B1AEA0 /* Speech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1D414FEB1F44F48400B1AEA0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1D414FEC1F44F48400B1AEA0 /* Speech.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		1D964D281F44EFE000A1208C = {
 			isa = PBXGroup;
 			children = (
 				1D964D331F44EFE000A1208C /* VoiceRecognition */,
 				1D964D321F44EFE000A1208C /* Products */,
+				1D414FEB1F44F48400B1AEA0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
