@@ -74,7 +74,7 @@ class ViewController: UIViewController {
                 }
                 
             default:
-                break
+                showDialog(title: nil, message: nil)
             }
             
             /*if authStatus == SFSpeechRecognizerAuthorizationStatus.authorized {
