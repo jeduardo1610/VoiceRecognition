@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        recognizeSpeech()
     }
 
     override func didReceiveMemoryWarning() {
@@ -23,5 +24,33 @@ class ViewController: UIViewController {
     }
 
 
+    func recognizeSpeech(){
+        SFSpeechRecognizer.requestAuthorization { (authStatus) in
+            
+            if authStatus == SFSpeechRecognizerAuthorizationStatus.authorized {
+                
+                if let path = Bundle.main.url(forResource: "audio", withExtension: "mp3") {
+                    
+                    let recognizer = SFSpeechRecognizer()
+                    let request = SFSpeechURLRecognitionRequest(url: path)
+                    recognizer?.recognitionTask(with: request, resultHandler: { (result, error) in
+                        
+                        if let error = error {
+                            print (error.localizedDescription)
+                        } else {
+                            self.textView.text = result?.bestTranscription.formattedString
+                        }
+                        
+                    })
+                    
+                }
+                
+            } else {
+                print("Unable to access to resources")
+            }
+            
+        }
+    }
+    
 }
 
