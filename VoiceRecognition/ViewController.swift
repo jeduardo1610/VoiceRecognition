@@ -36,7 +36,7 @@ class ViewController: UIViewController {
                     recognizer?.recognitionTask(with: request, resultHandler: { (result, error) in
                         
                         if let error = error {
-                            print (error.localizedDescription)
+                            print ("Something went terribly wrong \(error.localizedDescription)")
                         } else {
                             self.textView.text = result?.bestTranscription.formattedString
                         }
