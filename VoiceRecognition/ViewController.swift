@@ -12,6 +12,9 @@ import Speech
 class ViewController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
+    var audioRecordSession : AVAudioSession!
+    let audioFileName : String = "audio-recordered.m4a"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -48,7 +51,7 @@ class ViewController: UIViewController {
             switch auth {
             case 0://notDetermined
                 print("notDetermined")
-                self.showDialog(title: "Voice Recognition", message: "Not Determined")
+                self.showDialog(title: "Voice Recognition", message: "Unknown access\nPlease go to settings and enable permissions for this app")
             case 1: //denied
                 print("Denied")
                 self.showDialog(title: "Voice Recognition" , message: "Access Denied\nPlease go to settings and enable permissions for this app")
@@ -65,8 +68,6 @@ class ViewController: UIViewController {
                             print ("Something went terribly wrong \(error.localizedDescription)")
                         } else {
                             self.textView.text = String(describing: result?.bestTranscription.formattedString)
-                            print("---------------------RESULT--------------------")
-                            print(String(describing: result?.bestTranscription.formattedString))
                         }
                         
                     })
@@ -74,7 +75,7 @@ class ViewController: UIViewController {
                 }
                 
             default:
-                showDialog(title: nil, message: nil)
+                self.showDialog(title: nil, message: nil)
             }
             
             /*if authStatus == SFSpeechRecognizerAuthorizationStatus.authorized {
@@ -100,6 +101,38 @@ class ViewController: UIViewController {
             }*/
             
         }
+    }
+    
+    func recordAudioSetuo(){
+        
+        audioRecordSession = AVAudioSession.sharedInstance()
+        
+        do {
+            try audioRecordSession.setCategory(AVAudioSessionCategoryRecord)
+            try audioRecordSession.setActive(true)
+            
+            audioRecordSession.requestRecordPermission({[unowned self] (permissionGranted : Bool) in
+                if permissionGranted {
+                    
+                    
+                    
+                } else {
+                    self.showDialog(title: "Setting Up Recorder", message: "Access Denied\nPlease go to settings and enable permissions for this app")
+                }
+            })
+            
+        } catch {
+            print ("Something went terribly wrong while setting up the recorder")
+
+        }
+        
+    }
+    
+    func directoryURL() -> NSURL? {
+        let fileManager = FileManager.default
+        let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = urls[0] as URL
+        return documentsDirectory.appendingPathComponent(audioFileName) as NSURL
     }
     
 }
