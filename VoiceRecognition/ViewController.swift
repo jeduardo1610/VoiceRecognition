@@ -9,16 +9,18 @@
 import UIKit
 import Speech
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, AVAudioRecorderDelegate{
 
     @IBOutlet weak var textView: UITextView!
     var audioRecordSession : AVAudioSession!
     let audioFileName : String = "audio-recordered.m4a"
+    var audioRecorder : AVAudioRecorder!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        recognizeSpeech()
+        //recognizeSpeech()
+        recordAudioSetup()
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,22 +59,18 @@ class ViewController: UIViewController {
                 self.showDialog(title: "Voice Recognition" , message: "Access Denied\nPlease go to settings and enable permissions for this app")
             case 3://authorized
                 print("authorized")
-                
-                if let path = Bundle.main.url(forResource: "audio", withExtension: "mp3") {
                     
-                    let recognizer = SFSpeechRecognizer()
-                    let request = SFSpeechURLRecognitionRequest(url: path)
-                    recognizer?.recognitionTask(with: request, resultHandler: { (result, error) in
-                        
-                        if let error = error {
-                            print ("Something went terribly wrong \(error.localizedDescription)")
-                        } else {
-                            self.textView.text = String(describing: result?.bestTranscription.formattedString)
-                        }
-                        
-                    })
+                let recognizer = SFSpeechRecognizer()
+                let request = SFSpeechURLRecognitionRequest(url: self.directoryURL()!)
+                recognizer?.recognitionTask(with: request, resultHandler: { (result, error) in
                     
-                }
+                    if let error = error {
+                        print ("Something went terribly wrong \(error.localizedDescription)")
+                    } else {
+                        self.textView.text = String(describing: result?.bestTranscription.formattedString)
+                    }
+                    
+                })
                 
             default:
                 self.showDialog(title: nil, message: nil)
@@ -103,7 +101,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func recordAudioSetuo(){
+    func recordAudioSetup(){
         
         audioRecordSession = AVAudioSession.sharedInstance()
         
@@ -114,7 +112,7 @@ class ViewController: UIViewController {
             audioRecordSession.requestRecordPermission({[unowned self] (permissionGranted : Bool) in
                 if permissionGranted {
                     
-                    
+                    self.startRecording()
                     
                 } else {
                     self.showDialog(title: "Setting Up Recorder", message: "Access Denied\nPlease go to settings and enable permissions for this app")
@@ -128,11 +126,35 @@ class ViewController: UIViewController {
         
     }
     
-    func directoryURL() -> NSURL? {
+    func directoryURL() -> URL? {
         let fileManager = FileManager.default
         let urls = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = urls[0] as URL
-        return documentsDirectory.appendingPathComponent(audioFileName) as NSURL
+        return documentsDirectory.appendingPathComponent(audioFileName)
+    }
+    
+    func startRecording() {
+        
+        let settings : [String : Any] = [AVFormatIDKey : Int(kAudioFormatMPEG4AAC),
+                        AVSampleRateKey : 12000.0,
+                        AVNumberOfChannelsKey : 1 as NSNumber,
+                        AVEncoderAudioQualityKey : AVAudioQuality.high.rawValue]
+        do {
+            audioRecorder = try AVAudioRecorder(url: directoryURL()!, settings: settings)
+            audioRecorder.delegate = self
+            audioRecorder.record()
+            Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(self.stopRecording), userInfo: nil, repeats: false)
+
+        } catch {
+            self.showDialog(title: "Audio Recording", message: "Unable to start recording audio")
+        }
+        
+    }
+    
+    func stopRecording(){
+        audioRecorder.stop()
+        audioRecorder = nil
+        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.recognizeSpeech), userInfo: nil, repeats: false)
     }
     
 }
